@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: OSHA Interpretations Scraper using Crawlee
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    Description: Deployment stage
+  MongoDbUri:
+    Type: String
+    Description: MongoDB connection URI
+    default: test123
+  MongoDbName:
+    Type: String
+    Default: mancomm
+    Description: MongoDB database name
+  MaxInterpretations:
+    Type: Number
+    Default: 100
+    Description: Maximum number of interpretations to process per run
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    Environment:
+      Variables:
+        MONGODB_URI: !Ref MongoDbUri
+        MONGODB_NAME: !Ref MongoDbName
+        MAX_INTERPRETATIONS: !Ref MaxInterpretations
+
+Resources:
+  OshaScraperFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-osha-scraper-${Stage}
+      CodeUri: ./src/
+      Handler: handlers/scraper.handler
+      Timeout: 900  # 15 minutes max timeout
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Name: !Sub ${AWS::StackName}-hourly-scraper-${Stage}
+            Description: Runs OSHA interpretations scraper every hour
+            Enabled: true
+
+Outputs:
+  OshaScraperFunction:
+    Description: OSHA Interpretations Scraper Lambda Function ARN
+    Value: !GetAtt OshaScraperFunction.Arn
+  OshaScraperFunctionRole:
+    Description: Implicit IAM Role created for the function
+    Value: !GetAtt OshaScraperFunctionRole.Arn

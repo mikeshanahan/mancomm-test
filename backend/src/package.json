@@ -1,0 +1,10 @@
+{
+  "name": "osha-interpretations-scraper",
+  "version": "1.0.0",
+  "description": "OSHA interpretations scraper with shared code",
+  "main": "index.js",
+  "dependencies": {
+    "crawlee": "^3.13.2",
+    "mongodb": "^6.16.0"
+  }
+}

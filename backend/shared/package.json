@@ -1,0 +1,9 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared modules for OSHA interpretations scraper",
+  "dependencies": {
+    "crawlee": "^3.13.2",
+    "mongodb": "^6.16.0"
+  }
+}
