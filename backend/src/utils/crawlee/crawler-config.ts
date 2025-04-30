@@ -11,12 +11,12 @@ if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
   Configuration.getGlobalConfig().set('storageDir' as any, './storage');
 }
 
-export function getStorageDirectory(): string | undefined {
+export function getStorageDirectory(uniqueId?: string): string | undefined {
   // Check if running in AWS Lambda environment
   if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    return '/tmp/crawlee-storage';
+    return uniqueId ? `/tmp/crawlee-storage-${uniqueId}` : '/tmp/crawlee-storage';
   }
   
-  // Return undefined for default storage directory in non-Lambda environments
-  return undefined;
+  // Return unique directory for non-Lambda environments to avoid lock conflicts
+  return uniqueId ? `./storage-${uniqueId}` : './storage';
 }

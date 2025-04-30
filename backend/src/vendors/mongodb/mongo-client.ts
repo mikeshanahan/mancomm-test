@@ -22,14 +22,14 @@ export class MongoClient {
       };
       
       this.client = new Client(uri, connectionOptions);
-      // await this.client.connect();
+      await this.client.connect();
       this.db = this.client.db(dbName);
     }
   }
 
   public async disconnect(): Promise<void> {
     if (this.client) {
-      // await this.client.close();
+      await this.client.close();
       this.client = null;
       this.db = null;
     }

@@ -52,8 +52,9 @@ export async function crawlLinks(
   const pageResults: PageResult[] = [];
   const crawledUrls: string[] = [];
   
-  // Create request queue with appropriate storage directory
-  const requestQueue = await RequestQueue.open(getStorageDirectory());
+  // Create request queue with unique storage directory to avoid lock file conflicts
+  const uniqueId = `crawl-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const requestQueue = await RequestQueue.open(getStorageDirectory(uniqueId));
   await requestQueue.addRequest({ url: baseUrl });
   
   // Create crawler
@@ -138,8 +139,9 @@ export async function crawlAndProcess(
   
   const crawledUrls: string[] = [];
   
-  // Create request queue with appropriate storage directory
-  const requestQueue = await RequestQueue.open(getStorageDirectory());
+  // Create request queue with unique storage directory to avoid lock file conflicts
+  const uniqueId = `crawl-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const requestQueue = await RequestQueue.open(getStorageDirectory(uniqueId));
   await requestQueue.addRequest({ url: baseUrl });
   
   // Create crawler

@@ -30,22 +30,19 @@ export class OshaInterpretationsRepo extends MongoRepository<OshaInterpretation>
     let filter: any = { successful: true };
     
     if (query) {
-      const orConditions = [
-        { url: { $regex: query, $options: 'i' } },
-        { title: { $regex: query, $options: 'i' } },
-        { content: { $regex: query, $options: 'i' } },
-        { standardNumberLinks: { $elemMatch: { $regex: query, $options: 'i' } } }
-      ];
-      
-      // Add text search if query is not empty
-      if (query.trim()) {
-        // Using any type to avoid TypeScript errors with MongoDB operators
-        orConditions.push({ $text: { $search: query } } as any);
-      }
-      
+      // Only content uses text search, others use case-insensitive regex
       filter = {
-        $or: orConditions,
-        successful: true
+        $and: [
+          {
+            $or: [
+              { url: { $regex: query, $options: 'i' } },
+              { title: { $regex: query, $options: 'i' } },
+              { content: { $regex: query, $options: 'i' } },
+              { standardNumberLinks: { $elemMatch: { $regex: query, $options: 'i' } } }
+            ]
+          },
+          { successful: true }
+        ]
       };
     }
     

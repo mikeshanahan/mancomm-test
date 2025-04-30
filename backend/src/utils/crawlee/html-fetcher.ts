@@ -35,8 +35,9 @@ export async function fetchHtml(url: string, options: FetchOptions = {}): Promis
       success: false
     };
     
-    // Create request queue with appropriate storage directory
-    const requestQueue = await RequestQueue.open(getStorageDirectory());
+    // Create request queue with unique storage directory to avoid lock file conflicts
+    const uniqueId = `fetch-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const requestQueue = await RequestQueue.open(getStorageDirectory(uniqueId));
     await requestQueue.addRequest({ url });
     
     // Create crawler
@@ -98,8 +99,9 @@ export async function fetchMultipleHtml(
     
     const results: FetchResult[] = [];
     
-    // Create request queue with appropriate storage directory
-    const requestQueue = await RequestQueue.open(getStorageDirectory());
+    // Create request queue with unique storage directory to avoid lock file conflicts
+    const uniqueId = `fetch-multi-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const requestQueue = await RequestQueue.open(getStorageDirectory(uniqueId));
     await requestQueue.addRequests(urls.map(url => ({ url })));
     
     // Create crawler
