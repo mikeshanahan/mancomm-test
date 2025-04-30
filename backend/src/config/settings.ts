@@ -8,7 +8,7 @@ export const Settings = {
    * MongoDB settings
    */
   mongo: {
-    uri: process.env.MONGODB_URI || 'mongodb+srv://mike:xxx@manncomm-test.zmgkpv3.mongodb.net/?retryWrites=true&w=majority&appName=manncomm-test',
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
     dbName: process.env.MONGODB_NAME || 'mancomm',
   },
   
