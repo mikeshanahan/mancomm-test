@@ -1,9 +1,21 @@
 {
+  "name": "osha-interpretations-scraper",
+  "version": "1.0.0",
+  "description": "OSHA interpretations scraper and api",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "rm -rf dist && tsc && cp -r node_modules dist && sam build && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset"
+  },
   "dependencies": {
     "crawlee": "^3.13.2",
     "dotenv": "^16.5.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9"
   }
 }

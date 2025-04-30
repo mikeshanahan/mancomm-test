@@ -11,7 +11,6 @@ Parameters:
   MongoDbUri:
     Type: String
     Description: MongoDB connection URI
-    default: test123
   MongoDbName:
     Type: String
     Default: mancomm
@@ -23,7 +22,7 @@ Parameters:
 
 Globals:
   Function:
-    Runtime: nodejs18.x
+    Runtime: nodejs22.x
     Environment:
       Variables:
         MONGODB_URI: !Ref MongoDbUri
@@ -35,9 +34,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub ${AWS::StackName}-osha-scraper-${Stage}
-      CodeUri: ./src/
+      CodeUri: ./dist
       Handler: handlers/scraper.handler
-      Timeout: 900  # 15 minutes max timeout
+      Timeout: 900
+      MemorySize: 2048
       Events:
         ScheduledEvent:
           Type: Schedule
@@ -46,11 +46,17 @@ Resources:
             Name: !Sub ${AWS::StackName}-hourly-scraper-${Stage}
             Description: Runs OSHA interpretations scraper every hour
             Enabled: true
-
-Outputs:
-  OshaScraperFunction:
-    Description: OSHA Interpretations Scraper Lambda Function ARN
-    Value: !GetAtt OshaScraperFunction.Arn
-  OshaScraperFunctionRole:
-    Description: Implicit IAM Role created for the function
-    Value: !GetAtt OshaScraperFunctionRole.Arn
+  OshaInterpretationsApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-osha-interpretations-api-${Stage}
+      CodeUri: ./dist
+      Handler: handlers/api.handler
+      Timeout: 30
+      MemorySize: 1024
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

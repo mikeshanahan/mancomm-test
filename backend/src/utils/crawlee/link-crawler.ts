@@ -1,4 +1,5 @@
 import { CheerioCrawler, RequestQueue } from 'crawlee';
+import { getStorageDirectory } from './crawler-config';
 
 /**
  * Result from crawling a URL and its links
@@ -51,8 +52,8 @@ export async function crawlLinks(
   const pageResults: PageResult[] = [];
   const crawledUrls: string[] = [];
   
-  // Create request queue
-  const requestQueue = await RequestQueue.open();
+  // Create request queue with appropriate storage directory
+  const requestQueue = await RequestQueue.open(getStorageDirectory());
   await requestQueue.addRequest({ url: baseUrl });
   
   // Create crawler
@@ -137,8 +138,8 @@ export async function crawlAndProcess(
   
   const crawledUrls: string[] = [];
   
-  // Create request queue
-  const requestQueue = await RequestQueue.open();
+  // Create request queue with appropriate storage directory
+  const requestQueue = await RequestQueue.open(getStorageDirectory());
   await requestQueue.addRequest({ url: baseUrl });
   
   // Create crawler

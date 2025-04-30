@@ -1,9 +1,0 @@
-{
-	"id": "zwfoisTBhReviSZ",
-	"json": "{\"id\":\"zwfoisTBhReviSZ\",\"url\":\"https://www.osha.gov/laws-regs/standardinterpretations/2020-11-10\",\"loadedUrl\":\"https://www.osha.gov/laws-regs/standardinterpretations/2020-11-10\",\"uniqueKey\":\"https://www.osha.gov/laws-regs/standardinterpretations/2020-11-10\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2025-04-29T20:55:18.091Z\"}",
-	"method": "GET",
-	"orderNo": null,
-	"retryCount": 0,
-	"uniqueKey": "https://www.osha.gov/laws-regs/standardinterpretations/2020-11-10",
-	"url": "https://www.osha.gov/laws-regs/standardinterpretations/2020-11-10"
-}

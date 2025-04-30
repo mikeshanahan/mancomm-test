@@ -8,8 +8,8 @@ export const Settings = {
    * MongoDB settings
    */
   mongo: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
-    dbName: process.env.MONGODB_NAME || 'oshaDb',
+    uri: process.env.MONGODB_URI || 'mongodb+srv://mike:DPFU2BrqYp8ElpZv@manncomm-test.zmgkpv3.mongodb.net/?retryWrites=true&w=majority&appName=manncomm-test',
+    dbName: process.env.MONGODB_NAME || 'mancomm',
   },
   
   /**

@@ -19,9 +19,7 @@ Parameters:
     Description: Maximum number of interpretations to process per run
 Globals:
   Function:
-    Timeout: 900
-    MemorySize: 1024
-    Runtime: nodejs18.x
+    Runtime: nodejs22.x
     Environment:
       Variables:
         MONGODB_URI:
@@ -39,6 +37,7 @@ Resources:
       CodeUri: OshaScraperFunction
       Handler: handlers/scraper.handler
       Timeout: 900
+      MemorySize: 2048
       Events:
         ScheduledEvent:
           Type: Schedule
@@ -50,16 +49,20 @@ Resources:
             Enabled: true
     Metadata:
       SamResourceId: OshaScraperFunction
-Outputs:
-  OshaScraperFunction:
-    Description: OSHA Interpretations Scraper Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - OshaScraperFunction
-      - Arn
-  OshaScraperFunctionRole:
-    Description: Implicit IAM Role created for the function
-    Value:
-      Fn::GetAtt:
-      - OshaScraperFunctionRole
-      - Arn
+  OshaInterpretationsApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-osha-interpretations-api-${Stage}
+      CodeUri: OshaInterpretationsApi
+      Handler: handlers/api.handler
+      Timeout: 30
+      MemorySize: 1024
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      SamResourceId: OshaInterpretationsApi

@@ -1,7 +1,0 @@
-{
-  "name": "osha-scraper-lambda",
-  "version": "1.0.0",
-  "description": "Lambda function for scraping OSHA interpretations",
-  "main": "main.js",
-  "dependencies": {}
-}

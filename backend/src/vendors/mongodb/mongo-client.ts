@@ -1,6 +1,5 @@
 import { MongoClient as Client, Db, Collection, MongoClientOptions, IndexSpecification } from 'mongodb';
 import { MongoDocument } from './mongo-types';
-import { Settings } from '../../config';
 
 export class MongoClient {
   private client: Client | null = null;
@@ -16,17 +15,21 @@ export class MongoClient {
     return MongoClient.instance;
   }
 
-  public async connect(uri: string, dbName: string, options = {}): Promise<void> {
+  public async connect(uri: string, dbName: string): Promise<void> {
     if (!this.client) {
-      this.client = new Client(uri, options as MongoClientOptions);
-      await this.client.connect();
+      const connectionOptions: MongoClientOptions = {
+        serverApi: { version: '1', strict: true, deprecationErrors: true },
+      };
+      
+      this.client = new Client(uri, connectionOptions);
+      // await this.client.connect();
       this.db = this.client.db(dbName);
     }
   }
 
   public async disconnect(): Promise<void> {
     if (this.client) {
-      await this.client.close();
+      // await this.client.close();
       this.client = null;
       this.db = null;
     }

@@ -1,11 +1,16 @@
+/*
+Test for scraping a single interpretation url and loading into db 
+*/
+
 require('dotenv').config();
-const { OshaInterpretationsService } = require('../shared/contexts/osha-interpretations/osha-interpretations');
-const { MongoClient } = require('../shared/vendors/mongodb/mongo-client');
+const { OshaInterpretationsService } = require('../src/contexts/osha-interpretations/osha-interpretations');
+const { MongoClient } = require('../src/vendors/mongodb/mongo-client');
+const { Settings } = require('../src/config/settings');
 
 async function testSingleInterpretation() {
   // Setup db connection
   const mongoClient = MongoClient.getInstance();
-  await mongoClient.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', process.env.MONGODB_NAME || 'oshaDb');
+  await mongoClient.connect(Settings.mongo.uri, Settings.mongo.dbName);
 
   const url = 'https://www.osha.gov/laws-regs/standardinterpretations/2024-07-16';
   

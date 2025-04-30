@@ -1,4 +1,5 @@
 import { CheerioCrawler, RequestQueue } from 'crawlee';
+import { getStorageDirectory } from './crawler-config';
 
 /**
  * Result from fetching a URL
@@ -34,8 +35,8 @@ export async function fetchHtml(url: string, options: FetchOptions = {}): Promis
       success: false
     };
     
-    // Create request queue
-    const requestQueue = await RequestQueue.open();
+    // Create request queue with appropriate storage directory
+    const requestQueue = await RequestQueue.open(getStorageDirectory());
     await requestQueue.addRequest({ url });
     
     // Create crawler
@@ -97,8 +98,8 @@ export async function fetchMultipleHtml(
     
     const results: FetchResult[] = [];
     
-    // Create request queue
-    const requestQueue = await RequestQueue.open();
+    // Create request queue with appropriate storage directory
+    const requestQueue = await RequestQueue.open(getStorageDirectory());
     await requestQueue.addRequests(urls.map(url => ({ url })));
     
     // Create crawler

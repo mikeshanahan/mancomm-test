@@ -1,11 +1,16 @@
+/* 
+Test for running full sync operation
+*/
+
 require('dotenv').config();
-const { OshaInterpretationsService } = require('../shared/contexts/osha-interpretations/osha-interpretations.ts');
-const { OshaInterpretationsSyncService } = require('../shared/contexts/osha-interpretations/sync-interpretations.ts');
-const { MongoClient } = require('../shared/vendors/mongodb/mongo-client');
+const { OshaInterpretationsService } = require('../src/contexts/osha-interpretations/osha-interpretations.ts');
+const { OshaInterpretationsSyncService } = require('../src/contexts/osha-interpretations/sync-interpretations.ts');
+const { MongoClient } = require('../src/vendors/mongodb/mongo-client');
+const { Settings } = require('../src/config/settings');
 
 async function testSyncInterpretations() {
   const mongoClient = MongoClient.getInstance();
-  await mongoClient.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017', process.env.MONGODB_NAME || 'oshaDb');
+  await mongoClient.connect(Settings.mongo.uri, Settings.mongo.dbName);
 
   try {
     // Create the services
