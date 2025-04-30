@@ -1,0 +1,13 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "osha-interpretations-scraper"
+s3_bucket = "manncomm-test-bucket"
+s3_prefix = "osha-interpretations-scraper"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Stage=dev MongoDbName=mancomm MaxInterpretations=100 MongoDbUri=mongodb+srv://mike:xxx@manncomm-test.zmgkpv3.mongodb.net/?retryWrites=true&w=majority&appName=manncomm-test"
+image_repositories = []
+
+

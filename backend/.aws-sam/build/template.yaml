@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: OSHA Interpretations Scraper using Crawlee
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    Description: Deployment stage
+  MongoDbUri:
+    Type: String
+    Description: MongoDB connection URI
+  MongoDbName:
+    Type: String
+    Default: mancomm
+    Description: MongoDB database name
+  MaxInterpretations:
+    Type: Number
+    Default: 100
+    Description: Maximum number of interpretations to process per run
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Environment:
+      Variables:
+        MONGODB_URI:
+          Ref: MongoDbUri
+        MONGODB_NAME:
+          Ref: MongoDbName
+        MAX_INTERPRETATIONS:
+          Ref: MaxInterpretations
+Resources:
+  OshaScraperFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-osha-scraper-${Stage}
+      CodeUri: OshaScraperFunction
+      Handler: handlers/scraper.handler
+      Timeout: 900
+      MemorySize: 2048
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Name:
+              Fn::Sub: ${AWS::StackName}-hourly-scraper-${Stage}
+            Description: Runs OSHA interpretations scraper every hour
+            Enabled: true
+    Metadata:
+      SamResourceId: OshaScraperFunction
+  OshaInterpretationsApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: ${AWS::StackName}-osha-interpretations-api-${Stage}
+      CodeUri: OshaInterpretationsApi
+      Handler: handlers/api.handler
+      Timeout: 30
+      MemorySize: 1024
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      SamResourceId: OshaInterpretationsApi
