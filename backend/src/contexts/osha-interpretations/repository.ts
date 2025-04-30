@@ -30,15 +30,17 @@ export class OshaInterpretationsRepo extends MongoRepository<OshaInterpretation>
     let filter: any = { successful: true };
     
     if (query) {
-      // Only content uses text search, others use case-insensitive regex
+      // Escape special regex characters to match the exact string
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      
       filter = {
         $and: [
           {
             $or: [
-              { url: { $regex: query, $options: 'i' } },
-              { title: { $regex: query, $options: 'i' } },
-              { content: { $regex: query, $options: 'i' } },
-              { standardNumberLinks: { $elemMatch: { $regex: query, $options: 'i' } } }
+              { url: { $regex: escapedQuery, $options: 'i' } },
+              { title: { $regex: escapedQuery, $options: 'i' } },
+              { content: { $regex: escapedQuery, $options: 'i' } },
+              { standardNumberLinks: { $elemMatch: { $regex: escapedQuery, $options: 'i' } } }
             ]
           },
           { successful: true }

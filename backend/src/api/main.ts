@@ -16,15 +16,27 @@ export const router = async (request: ParsedRequest): Promise<{statusCode: numbe
         };
     }
     
-    authenticate(request);
-    
-    if (path.startsWith('/interpretations')) {
-        const api = new OshaInterpretationsApi();
-        return await api.handleRequest(request);
+    try {
+        authenticate(request);
+        
+        if (path.startsWith('/interpretations')) {
+            const api = new OshaInterpretationsApi();
+            return await api.handleRequest(request);
+        }
+        
+        return {
+            statusCode: 404,
+            body: JSON.stringify({ error: 'Not found' })
+        };
+    } catch (error) {
+        if (error && typeof error === 'object' && 'statusCode' in error && 'body' in error) {
+            return error as {statusCode: number; body: string};
+        }
+        
+        console.error('Unhandled error in router:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Internal server error' })
+        };
     }
-    
-    return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'Not found' })
-    };
 };
